@@ -1,4 +1,9 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Simply view most upvoted / downvoted commentaries from a [BBC](https://www.bbc.com) Live post.
+
+
+## Dependencies
+- [NextJS](https://nextjs.org/)
+- [Chakra UI](https://chakra-ui.com/)
 
 ## Getting Started
 

@@ -1,57 +1,77 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import { Flex, Box, Heading } from "@chakra-ui/react";
+import Search from "../components/search";
+import Highlights from "../components/highlights";
+
+type PageProps = {
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
+export default function Home({ searchParams }: PageProps) {
+  const [response, setResponse] = useState<any>();
+
+  useEffect(() => {
+    const loadAPI = async () => {
+      const res = await window.fetch(`api/live?live=${searchParams!.live}`);
+      const jsonRes = await res.json();
+      setResponse(jsonRes);
+    };
+
+    loadAPI();
+  }, [setResponse, searchParams]);
+
+  const onSearch = (query: string) => {
+    const searchParam = parseQuery(query);
+    var searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("live", searchParam);
+    window.location.search = searchParams.toString();
+  };
+
   return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js 13!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://beta.nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js 13</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
+    <div>
+        <Box backgroundColor={"bbc.900"} padding="3" as="header" marginBottom={10}>
+          <Flex
+            direction={["column", "row"]}
+            justifyContent={"space-between"}
+            alignItems={"center"}
           >
-            <h2>Examples &rarr;</h2>
-            <p>Explore the Next.js 13 playground.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates/next.js/app-directory?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>Deploy your Next.js site to a public URL with Vercel.</p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+            <Heading
+              size="md"
+              color={"white"}
+              textAlign={"center"}
+              marginRight="5"
+            >
+              BBC Live Highlights
+            </Heading>
+            <Search onSearch={onSearch} />
+          </Flex>
+        </Box>
+      <Flex
+        flexDirection="column"
+        alignItems={"center"}
+        justifyContent="center"
+      >
+        <Box w="75%">
+          <Box textAlign={"center"}>
+            Simpy lookup most voted and downvoted commentary from a BBC Live
+            feed
+          </Box>
+          {response ? <Highlights commentaries={response} /> : null}
+        </Box>
+      </Flex>
     </div>
-  )
+  );
+}
+
+function parseQuery(query: string): string {
+  // Assume it's a full URL
+  if (query.includes("bbc.com")) {
+    const url = new URL(query);
+    return query.substring(url.origin.length);
+  }
+  if (query.startsWith("/")) {
+    return "/" + query;
+  }
+  return query;
 }
