@@ -36,8 +36,8 @@ const COMMENTARY_QUERY = "lx-commentary-data-paged";
 const REACTION_QUERY = "lx-stream-reaction-counts-data";
 
 export const BBCClient = {
-  get: async (resource?: string) => {
-    const liveID = resource || "/sport/live/formula1/58920213";
+  get: async (resource: string) => {
+    const liveID = resource;
     const encodedResource = encodeURIComponent(liveID);
     const finalURL = getPageURL(encodedResource, 1);
     const response = await fetch(finalURL);

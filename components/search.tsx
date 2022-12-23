@@ -17,8 +17,8 @@ export default function Search({ onSearch }: SearchProps) {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
-        search: { value: string };
-      };
+      search: { value: string };
+    };
 
     const searchedTerm = target.search.value;
     onSearch(searchedTerm);
@@ -36,7 +36,11 @@ export default function Search({ onSearch }: SearchProps) {
               backgroundColor={"white"}
             />
             <InputRightElement>
-              <IconButton aria-label="Search database" icon={<SearchIcon />} type="submit"/>
+              <IconButton
+                aria-label="Search database"
+                icon={<SearchIcon />}
+                type="submit"
+              />
             </InputRightElement>
           </InputGroup>
         </Flex>
