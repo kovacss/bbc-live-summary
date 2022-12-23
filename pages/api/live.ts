@@ -7,6 +7,10 @@ export default async function handler(
   res: NextApiResponse<CommentaryType[]>
 ) {
   const query = req.query['live'];
+  if (!query) {
+    res.status(400);
+    return;
+  }
   const result = await BBCClient.get(Array.isArray(query) ? query[0] : query);
   // res.setHeader('cache-control', 'public, s-maxage=1200, stale-while-revalidate=600')
   res.status(200).json(result)
